@@ -41,5 +41,7 @@ class PipelineSpider(scrapy.Spider):
                 'block-photographers': response.css("div.photo-block div.container span.small a::text").extract(),
                 'block-captions': response.css("div.photo-block div.container span.caption::text").extract(),
                 
-                'body' : remove_tags(" ".join(response.css("div.body p").extract())).replace("\n",''),
+                'body': remove_tags(" ".join(response.css("div.body p").extract())).replace("\n", ''),
+                
+                'url': response.url
             }
