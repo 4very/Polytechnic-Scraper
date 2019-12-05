@@ -14,14 +14,18 @@ class PipelineSpider(scrapy.Spider):
         if (response.url == "https://poly.rpi.edu/archives/"):
             rel_links = response.css("section.content a.px-2::attr(href)").extract()
             for link in rel_links:
+                print(response.urljoin(link))
                 yield scrapy.Request(url=response.urljoin(link))
         
         elif (response.css("h1 a::text").extract_first() == "Archives"):
+            print("Archive: ", response.url)
             rel_links = response.css("h3.headline a::attr(href)").extract()
             for link in rel_links:
+                print(response.urljoin(link))
                 yield scrapy.Request(url=response.urljoin(link))
         
         else:
+            print("Non Archive: ", response.url)
             yield {
                 'section': response.css("a.active::text").extract_first(),
                 'kicker': response.css("strong.text-kicker::text").extract_first(),
@@ -33,7 +37,7 @@ class PipelineSpider(scrapy.Spider):
                 'featured-photo-photographer': response.css("div.featured-photo span.small a::text").extract_first(),
                 'featured-photo-caption': remove_tags("".join(response.css("span.caption").re(r'<span.*?>(.*?)<\/span>'))),
                 
-                'num-gallery-photos': len(response.css("div.photo-gallery div.photo").extract()),
+                'has-gallery': response.css("div.photo-gallery::text").extract_first() is not None,
                 'gallery-photographers': response.css("div.photo-gallery div.photo img::attr(data-photographer)").re(r'<a.*>(.*?)<\/a>'),
                 'gallery-captions': response.css("div.photo-gallery div.photo img::attr(data-caption)").extract(),
                 
