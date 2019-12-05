@@ -14,7 +14,8 @@ class WordpressSpider(scrapy.Spider):
          for link in links:
             yield scrapy.Request(url=link)
          next_page = response.css("div.nav-previous a::attr(href)").extract_first()
-         yield scrapy.Request(url=next_page)
+         if next_page is not None:
+            yield scrapy.Request(url=next_page)
       elif (response.css('div.entry-meta a[rel="category tag"]::text').extract_first() == "PDF Archives"):
          pass
       else:
