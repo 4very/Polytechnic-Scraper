@@ -15,14 +15,13 @@ class PipelineSpider(scrapy.Spider):
             rel_links = response.css("section.content a.px-2::attr(href)").extract()
             for link in rel_links:
                 yield scrapy.Request(url=response.urljoin(link))
-                print(response.urljoin(link))
                 
         elif (response.css("h1 a::text").extract_first() == "Archives"):
             rel_links = response.css("h3.headline a::attr(href)").extract()
             for link in rel_links:
                 yield scrapy.Request(url=response.urljoin(link))
         
-        elif(0):
+        else:
             yield {
                 'section': response.css("a.active::text").extract_first(),
                 'kicker': response.css("strong.text-kicker::text").extract_first(),
