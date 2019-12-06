@@ -15,18 +15,19 @@ class PipelineSpider(scrapy.Spider):
             rel_links = response.css("section.content a.px-2::attr(href)").extract()
             for link in rel_links:
                 yield scrapy.Request(url=response.urljoin(link))
-        
+                print(response.urljoin(link))
+                
         elif (response.css("h1 a::text").extract_first() == "Archives"):
             rel_links = response.css("h3.headline a::attr(href)").extract()
             for link in rel_links:
                 yield scrapy.Request(url=response.urljoin(link))
         
-        else:
+        elif(0):
             yield {
                 'section': response.css("a.active::text").extract_first(),
                 'kicker': response.css("strong.text-kicker::text").extract_first(),
                 'headline': remove_tags("".join(response.css("h1.article-headline").re(r'<h1.*?>(.*?)<\/h1>'))),
-                'author': response.css(".author-name::text").extract(),
+                'author': remove_tags(response.css("span.authors .author-name").extract_first()),
                 'posted-date': response.css("a.published-date::text").extract_first().strip(),
                  
                 'has-featured-photo': response.css("div.featured-photo img::attr(src)").extract_first() is not None,
