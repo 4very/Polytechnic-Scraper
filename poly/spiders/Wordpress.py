@@ -27,7 +27,7 @@ class WordpressSpider(scrapy.Spider):
             'posted-date': response.css("div.entry-meta span.entry-date::text").extract_first(),
             
             'has-featured-photo': response.css("div.entry-content div.photo").extract_first() is not None,
-            'featured-photo-photographer': response.css("div.entry-content div.photo div.byline::text").extract_first(),
+            'featured-photo-photographer': response.css("div.entry-content div.photo div.byline::text").re_first(r"(.*)\/"),
             'featured-photo-caption': response.css("div.entry-content div.photo::text").extract_first(),
             
             'num-gallery-photos': len(response.css("div.gallery div.gallery-item").extract()),
